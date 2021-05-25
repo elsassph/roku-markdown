@@ -1,15 +1,8 @@
-sub MarkdownParser_spec()
-    assert = GetAssert(sub()
-        print "PASS"
-    end sub, sub(err)
-        print err.error
-        print err.found
-        print err.wanted
-        throw "FAIL"
-    end sub)
-
+sub Parser_spec()
     ' SETUP
-    md = MarkdownParser()
+
+    assert = GetAssert()
+    md = new Parser()
 
     ' CASES
 

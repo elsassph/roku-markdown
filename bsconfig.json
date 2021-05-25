@@ -3,7 +3,7 @@
     "files": [
         "**/*"
     ],
-    "sourceMap": true,
+    "emitDefinitions": true,
     "stagingFolderPath": "dist",
     "retainStagingFolder": true,
     "autoImportComponentScript": true,

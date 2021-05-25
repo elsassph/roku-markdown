@@ -1,11 +1,41 @@
-function GetAssert(passFunc, failFunc) as object
+' Adapted from https://github.com/hulu/roca/blob/main/resources/assert_lib.brs
+
+function GetAssert()
+    return RocaAssert(sub()
+        print "PASS"
+    end sub, sub(err)
+        print err.error
+        print err.found
+        print err.wanted
+        throw "FAIL"
+    end sub, {})
+end function
+
+'
+'     Copyright 2021 Hulu, LLC
+'
+' Licensed under the Apache License, Version 2.0 (the "License");
+' you may not use this file except in compliance with the License.
+' You may obtain a copy of the License at
+'
+'     http://www.apache.org/licenses/LICENSE-2.0
+'
+' Unless required by applicable law or agreed to in writing, software
+' distributed under the License is distributed on an "AS IS" BASIS,
+' WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+' See the License for the specific language governing permissions and
+' limitations under the License.
+
+function RocaAssert(passFunc, failFunc, state) as object
     return {
         __pass: passFunc,
         __fail: failFunc,
+        __state: state
         equal: __equal,
         notEqual: __notEqual,
         isTrue: __isTrue,
         isFalse: __isFalse,
+        isValid: __isValid,
         isInvalid: __isInvalid,
         formatError: __formatError,
         deepEquals: __deepEquals
@@ -64,6 +94,19 @@ sub __isFalse(actual, error)
     end if
 end sub
 
+sub __isValid(actual, error)
+    if actual <> invalid then
+        m.__pass()
+    else
+        m.__fail(m.formatError({
+            message: error,
+            actual: actual,
+            expected: "non-invalid",
+            funcName: "m.assert.isValid"
+        }))
+    end if
+end sub
+
 sub __isInvalid(actual, error)
     if actual = invalid then
         m.__pass()
@@ -77,12 +120,37 @@ sub __isInvalid(actual, error)
     end if
 end sub
 
+' Convert a value to a multiline string that's human-readable.
+' Converting every value to a string ensures that the diff will _always_ show up in the output.
+function __asReadableValue(value)
+    readable = { _roca_isMultilineString: true }
+    if GetInterface(value, "ifSGNodeDict") <> invalid then
+        readable.value = "[RoSGNode: " + value.subtype() + "]"
+    else if GetInterface(value, "ifAssociativeArray") <> invalid then
+        readable.value = formatJson(value)
+    else
+        readable.value = value
+    end if
+
+    return readable
+end function
+
 function __formatError(error)
+    ' Get the stack trace where the failed test is, filtering out any roca frames
+    fileFilters = ["roca"]
+    numStackFrames = 3
+    ' stack_frames = _brs_.getStackTrace(numStackFrames, fileFilters)
+
+    error.expected = __asReadableValue(error.expected)
+    error.actual = __asReadableValue(error.actual)
+
     ' Format this into the object that tap-mocha-reporter expects
     return {
         error: {
             name: error.funcName,
-            message: error.message
+            message: error.message,
+            ' use snake case so we don't have to worry about case-sensitivity
+            ' stack_frames: stack_frames
         },
         wanted: error.expected,
         found: error.actual
@@ -137,7 +205,7 @@ function __roca_deepEquals(lhs as object, rhs as object) as boolean
         end for
     end if
 
-    if __roca_isNumeric(lhs) <> __roca_isNumeric(rhs) then
+    if __roca_isNumeric(lhs) and __roca_isNumeric(rhs) then
         if lhs <> rhs then return false
     end if
 

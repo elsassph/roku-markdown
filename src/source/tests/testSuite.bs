@@ -1,0 +1,7 @@
+import "./Parser.spec.bs"
+import "./Renderer.spec.bs"
+
+sub testSuite()
+    Parser_spec()
+    Renderer_spec()
+end sub

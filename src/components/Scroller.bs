@@ -2,9 +2,14 @@ sub init()
     m.clipArea = m.top.findNode("clipArea")
     m.animation = m.top.findNode("scrollAnimation")
     m.interpolator = m.top.findNode("scrollInterpolator")
+    m.scrollTarget = invalid
 end sub
 
 sub setContent(node as object)
+    if m.scrollTarget <> invalid
+        m.clipArea.removeChild(m.scrollTarget)
+        m.scrollTarget = invalid
+    end if
     m.scrollTarget = node
     m.scrollTarget.id = "scrollTarget"
 

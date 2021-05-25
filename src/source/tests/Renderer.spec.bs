@@ -1,0 +1,44 @@
+import "pkg:/components/Renderer.bs"
+
+sub Renderer_spec()
+    ' SETUP
+
+    assert = GetAssert()
+
+    ' CASES
+
+    print "applyDefault"
+    expected = "def"
+    actual = applyDefault(invalid, "def")
+    assert.equal(expected, actual, "values don't match")
+    expected = "val"
+    actual = applyDefault("val", "def")
+    assert.equal(expected, actual, "values don't match")
+
+    print "applyDefaultInt"
+    expected = 1
+    actual = applyDefaultInt(0, 1)
+    assert.equal(expected, actual, "values don't match")
+    expected = 2
+    actual = applyDefaultInt(2, 1)
+    assert.equal(expected, actual, "values don't match")
+
+    print "applyDefaultPadding"
+    expected = [10, 20, 30, 40]
+    actual = applyDefaultPadding(invalid, [10, 20, 30, 40])
+    assert.deepEquals(expected, actual, "arrays don't match")
+    actual = applyDefaultPadding([], [10, 20, 30, 40])
+    assert.deepEquals(expected, actual, "arrays don't match")
+    expected = [5, 5, 5, 5]
+    actual = applyDefaultPadding([5], [10, 20, 30, 40])
+    assert.deepEquals(expected, actual, "arrays don't match")
+    expected = [5, 15, 5, 15]
+    actual = applyDefaultPadding([5, 15], [10, 20, 30, 40])
+    assert.deepEquals(expected, actual, "arrays don't match")
+    expected = [5, 15, 25, 15]
+    actual = applyDefaultPadding([5, 15, 25], [10, 20, 30, 40])
+    assert.deepEquals(expected, actual, "arrays don't match")
+    expected = [5, 15, 25, 35]
+    actual = applyDefaultPadding([5, 15, 25, 35], [10, 20, 30, 40])
+    assert.deepEquals(expected, actual, "arrays don't match")
+end sub

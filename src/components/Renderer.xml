@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component name="MarkdownView" extends="Group">
+<component name="Renderer" extends="Group">
     <interface>
         <field id="width" type="int" />
         <field id="height" type="int" />

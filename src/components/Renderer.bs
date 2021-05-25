@@ -12,11 +12,7 @@ end sub
 
 sub render(nodes as object)
     itemSpacings = applyDefaultInt(m.top.itemSpacings, 20)
-    if m.content = invalid
-        m.content = CreateObject("roSGNode", "LayoutGroup")
-    else
-        ' TODO: remove children
-    end if
+    m.content = CreateObject("roSGNode", "LayoutGroup")
     m.content.layoutDirection = "vert"
     m.content.itemSpacings = itemSpacings
 
@@ -55,7 +51,7 @@ function applyDefaultPadding(values as dynamic, defaultValues as object) as obje
         v1 = values[1]
         values = [v0, v1, v0, v1]
     else if len = 3
-        values[4] = values[1]
+        values[3] = values[1]
     end if
     return values
 end function

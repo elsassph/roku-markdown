@@ -1,6 +1,7 @@
-import "../source/MarkdownParser.brs"
+import "../source/Parser.bs"
 
 sub init()
+    ' fake some markdown input
     NL = chr(10)
     source =          "# Roku markdown renderer" + NL
     source = source + "This is a **simple markdown renderer** for Roku apps written in [BrighterScript](https://github.com/rokucommunity/brighterscript): the smarter language to build Roku apps!" + NL
@@ -15,11 +16,12 @@ sub init()
     source = source + "> (they say)" + NL + NL
     source = source + "> Though it doesn't handle inline styles" + NL
 
-    md = MarkdownParser()
+    ' parse markdown to an array of AAs
+    md = new Parser()
     blocks = md.parse(source)
 
+    ' render the data
     view = m.top.findNode("markdownView")
     view@.render(blocks)
-
     view.setFocus(true)
 end sub

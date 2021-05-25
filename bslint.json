@@ -1,0 +1,3 @@
+{
+    "ignores": [ "source/assert_lib.brs" ]
+}

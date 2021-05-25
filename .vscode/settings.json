@@ -1,0 +1,20 @@
+{
+    "files.exclude": {
+        "dist": true,
+        "out": true
+    },
+    "files.watcherExclude": {
+        "dist": true,
+        "out": true
+    },
+    "search.exclude": {
+        "dist": true,
+        "out": true
+    },
+    "xml.fileAssociations": [
+        {
+            "pattern": "**/*.xml",
+            "systemId": "https://devtools.web.roku.com/schema/RokuSceneGraph.xsd"
+        }
+    ]
+}

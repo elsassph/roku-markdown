@@ -3,3 +3,4 @@ dist
 out
 .roku-deploy-staging
 .env
+*.tgz
