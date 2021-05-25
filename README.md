@@ -2,6 +2,11 @@
 
 This is a **simple markdown renderer** for Roku apps written in [BrighterScript](https://github.com/rokucommunity/brighterscript).
 
+Parser and renderer support a subset of the markdown spec, and strip all inline styles. 
+The goal is to eventually support images between paragraphs.
+
+There is currently no plan to support full text styling.
+
 ## Setup instructions
 
 1. Install [NodeJS](https://nodejs.org)
