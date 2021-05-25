@@ -1,0 +1,18 @@
+{
+  "name": "roku-markdown",
+  "version": "1.0.0",
+  "description": "Markdown parser/renderer for Roku apps",
+  "scripts": {
+    "build": "bsc --sourceMap",
+    "lint": "bslint",
+    "package": "bsc --create-package"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "brighterscript": "^0.39.1"
+  },
+  "dependencies": {
+    "@rokucommunity/bslint": "^0.4.0"
+  },
+  "private": true
+}

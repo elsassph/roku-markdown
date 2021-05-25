@@ -1,0 +1,25 @@
+import "../source/MarkdownParser.brs"
+
+sub init()
+    NL = chr(10)
+    source =          "# Roku markdown renderer" + NL
+    source = source + "This is a **simple markdown renderer** for Roku apps written in [BrighterScript](https://github.com/rokucommunity/brighterscript): the smarter language to build Roku apps!" + NL
+    source = source + "## Installation" + NL
+    source = source + "    npm install" + NL
+    source = source + "    npm run build" + NL
+    source = source + "## Secret plan" + NL
+    source = source + "1. Steal underpants" + NL
+    source = source + "2. ..." + NL
+    source = source + "3. Profit!" + NL
+    source = source + "> It's amazing!!" + NL
+    source = source + "> (they say)" + NL + NL
+    source = source + "> Though it doesn't handle inline styles" + NL
+
+    md = MarkdownParser()
+    blocks = md.parse(source)
+
+    view = m.top.findNode("markdownView")
+    view@.render(blocks)
+
+    view.setFocus(true)
+end sub

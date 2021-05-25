@@ -1,0 +1,151 @@
+sub MarkdownParser_spec()
+    assert = GetAssert(sub()
+        print "PASS"
+    end sub, sub(err)
+        print err.error
+        print err.found
+        print err.wanted
+        throw "FAIL"
+    end sub)
+
+    ' SETUP
+    md = MarkdownParser()
+
+    ' CASES
+
+    print "Parses code (backticks)"
+    nodes = md.parse("Instructions:" + chr(10) + "```" + chr(10) + "npm install" + chr(10) + "    npm run _dev_" + chr(10) + "```" + chr(10) + "And enjoy")
+    assert.deepEquals(nodes, [
+        {
+            kind: "p"
+            data: "Instructions:"
+        },
+        {
+            kind: "code"
+            data: "npm install" + chr(10) + "    npm run _dev_"
+        },
+        {
+            kind: "p"
+            data: "And enjoy"
+        }
+    ], "Nodes do not match")
+
+    print "Parses code (indentation)"
+    nodes = md.parse("Instructions:" + chr(10) + "    npm install" + chr(10) + "    npm run _dev_" + chr(10) + "And enjoy")
+    assert.deepEquals(nodes, [
+        {
+            kind: "p"
+            data: "Instructions:"
+        },
+        {
+            kind: "code"
+            data: "npm install" + chr(10) + "npm run _dev_"
+        },
+        {
+            kind: "p"
+            data: "And enjoy"
+        }
+    ], "Nodes do not match")
+
+    print "Double newline forces flush"
+    nodes = md.parse("> Lorem ipsum dolor sit amet" + chr(10) + chr(10) + "> Fusce tincidunt augue pretium ipsum luctus")
+    assert.deepEquals(nodes, [
+        {
+            kind: "quote"
+            data: "Lorem ipsum dolor sit amet"
+        },
+        {
+            kind: "quote"
+            data: "Fusce tincidunt augue pretium ipsum luctus"
+        }
+    ], "Nodes do not match")
+
+    print "Parses quotes"
+    nodes = md.parse("> Lorem ipsum dolor sit amet" + chr(10) + "> consectetur adipiscing elit." + chr(10) + ">" + chr(10) + "> Fusce tincidunt augue pretium ipsum luctus")
+    assert.deepEquals(nodes, [
+        {
+            kind: "quote"
+            data: "Lorem ipsum dolor sit amet consectetur adipiscing elit."
+        },
+        {
+            kind: "quote"
+            data: "Fusce tincidunt augue pretium ipsum luctus"
+        }
+    ], "Nodes do not match")
+
+    print "Parses lists with multiline text"
+    nodes = md.parse("1. Lorem ipsum dolor sit amet" + chr(10) + "  consectetur adipiscing elit." + chr(10) + "2. Fusce tincidunt augue pretium ipsum luctus")
+    assert.deepEquals(nodes, [
+        {
+            kind: "ol"
+            data: ["Lorem ipsum dolor sit amet consectetur adipiscing elit.", "Fusce tincidunt augue pretium ipsum luctus"]
+        }
+    ], "Nodes do not match")
+
+    print "Parses lists"
+    nodes = md.parse("- Lorem ipsum dolor sit amet" + chr(10) + "- Consectetur adipiscing elit." + chr(10) + "+ Fusce tincidunt augue" + chr(10) + "+ pretium ipsum luctus")
+    assert.deepEquals(nodes, [
+        {
+            kind: "ul"
+            data: ["Lorem ipsum dolor sit amet", "Consectetur adipiscing elit.", "Fusce tincidunt augue", "pretium ipsum luctus"]
+        }
+    ], "Nodes do not match")
+
+    print "Parses headings"
+    nodes = md.parse("# Lorem ipsum *dolor* sit amet" + chr(10) + "## Consectetur adipiscing elit" + chr(10) + "Fusce tincidunt augue pretium ipsum luctus")
+    assert.deepEquals(nodes, [
+        {
+            kind: "h1"
+            data: "Lorem ipsum dolor sit amet"
+        },
+        {
+            kind: "h2"
+            data: "Consectetur adipiscing elit"
+        },
+        {
+            kind: "p"
+            data: "Fusce tincidunt augue pretium ipsum luctus"
+        }
+    ], "Nodes do not match")
+
+    print "Removes links from text"
+    nodes = md.parse("This is a template project for a Roku app written in [BrighterScript](https://github.com/rokucommunity/brighterscript)")
+    assert.deepEquals(nodes, [
+        {
+            kind: "p"
+            data: "This is a template project for a Roku app written in BrighterScript"
+        }
+    ], "Nodes do not match")
+
+    print "Trims and removes formatting from text"
+    nodes = md.parse(chr(10) + "**Lorem ipsum** dolor sit *amet*, consectetur _adipiscing_ elit.  " + chr(10))
+    assert.deepEquals(nodes, [
+        {
+            kind: "p"
+            data: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+        }
+    ], "Nodes do not match")
+
+    print "Creates a paragraph from multiline text"
+    nodes = md.parse("Lorem ipsum dolor sit amet,"+ chr(10) + "consectetur adipiscing elit." + chr(10) + chr(10) + "Fusce tincidunt augue pretium ipsum luctus, at hendrerit nulla posuere.")
+    assert.deepEquals(nodes, [
+        {
+            kind: "p"
+            data: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+        },
+        {
+            kind: "p"
+            data: "Fusce tincidunt augue pretium ipsum luctus, at hendrerit nulla posuere."
+        }
+    ], "Nodes do not match")
+
+    print "Creates a paragraph if nothing is matched"
+    nodes = md.parse("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce tincidunt augue pretium ipsum luctus, at hendrerit nulla posuere.")
+    assert.deepEquals(nodes, [
+        {
+            kind: "p"
+            data: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce tincidunt augue pretium ipsum luctus, at hendrerit nulla posuere."
+        }
+    ], "Nodes do not match")
+
+end sub

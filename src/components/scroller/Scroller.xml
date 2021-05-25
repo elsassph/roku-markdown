@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="Scroller" extends="Group">
+    <interface>
+        <field id="width" type="int" />
+        <field id="height" type="int" />
+        <field id="animatedScrolling" type="bool" value="true" />
+        <field id="scrollStep" type="int" />
+        <field id="scrollTop" type="int" value="0" onChange="applyScrolling" />
+        <function name="setContent" />
+    </interface>
+
+    <children>
+        <Group id="clipArea" />
+        <Animation id="scrollAnimation" duration="0.3" easeFunction="outCubic">
+            <Vector2DFieldInterpolator
+                id="scrollInterpolator"
+                fieldToInterp="scrollTarget.translation"
+                key="[0.0, 1.0]"
+            />
+        </Animation>
+    </children>
+</component>

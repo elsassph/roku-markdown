@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="MarkdownView" extends="Group">
+    <interface>
+        <field id="width" type="int" />
+        <field id="height" type="int" />
+        <field id="padding" type="array" />
+        <field id="itemSpacings" type="int" />
+        <field id="font" type="node" />
+        <field id="quoteFont" type="node" />
+        <field id="quotePadding" type="array" />
+        <field id="quoteBackground" type="string" />
+        <field id="codeFont" type="node" />
+        <field id="codePadding" type="array" />
+        <field id="codeBackground" type="string" />
+        <field id="h1Font" type="node" />
+        <field id="h2Font" type="node" />
+        <field id="h3Font" type="node" />
+        <field id="scrollTop" type="integer" alias="scroller.scrollTop" />
+        <function name="render" />
+    </interface>
+
+    <children>
+        <Scroller id="scroller" />
+    </children>
+</component>

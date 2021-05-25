@@ -1,0 +1,169 @@
+' Simplified Markdown parser
+' - lines: https://regex101.com/r/trs5vm/5
+' - styles: https://regex101.com/r/nEsAGD/1
+' - links: https://regex101.com/r/kQHsiI/1
+
+function MarkdownParser()
+    return {
+        reRefLink: createObject("roRegex", "^\[(.+?)\]:\s*(.+)$", "gm")
+        reLineToken: createObject("roRegex", "^(\n*)(?:([#]+)|(?:([>*+-]|\d+\.)[ \t]+)|(\t|[ ]{4})|(```))?(.*)$", "gm")
+        reStyle: createObject("roRegex", "([`*_]+\b)|(\b[`*_]+)", "g")
+        reLink: createObject("roRegex", "\[([^]]+)\]\([^)]*\)", "g")
+
+        parse: function(source as string) as object
+            nodes = []
+            reLineToken = m.reLineToken
+            reStyle = m.reStyle
+            reLink = m.reLink
+            isBackTick = false
+
+            ' sanitize
+            source = m.reRefLink.replace(source, "")
+            source = source.trim()
+
+            flush:
+            lastPara = invalid
+            lastList = invalid
+            lastCode = invalid
+
+            loop:
+            if len(source) = 0
+                goto eof
+            end if
+            ' tokenize next line from source
+            t = reLineToken.match(source)
+            tc = t.count()
+            if tc > 0
+                l0 = len(t[0])
+                source = source.mid(l0 + 1)
+
+                ' continuing code block
+                if isBackTick
+                    if tc > 5 and t[5] = "```" ' close block
+                        isBackTick = false
+                        goto flush
+                    end if
+                    if lastCode <> invalid
+                        lastCode.data = lastCode.data + chr(10) + t[0]
+                    else
+                        lastCode = {
+                            kind: "code"
+                            data: t[0]
+                        }
+                        nodes.push(lastCode)
+                    end if
+                    goto loop
+                end if
+
+                ' double newline, skip
+                if l0 = 0 or tc < 6
+                    goto flush
+                end if
+
+                ' code
+                if t[5] = "```"
+                    isBackTick = true
+                    goto flush
+                end if
+                if len(t[4]) > 0
+                    lastPara = invalid
+                    lastList = invalid
+                    if lastCode <> invalid
+                        lastCode.data = lastCode.data + chr(10) + t[6]
+                    else
+                        lastCode = {
+                            kind: "code"
+                            data: t[6]
+                        }
+                        nodes.push(lastCode)
+                    end if
+                    goto loop
+                end if
+
+                ' force flush (double newline)
+                if len(t[1]) > 0
+                    lastPara = invalid
+                    lastList = invalid
+                    lastCode = invalid
+                end if
+
+                ' sanitize text
+                text = reStyle.replaceAll(t[6], "").trim()
+                if len(text) = 0 'empty text
+                    if t[5] = "```" ' start code block
+                        isBackTick = true ' bs:disable-line
+                    end if
+                    goto flush
+                else if text = ">" ' empty quote line, start new quote
+                    goto flush
+                else
+                    text = reLink.replaceAll(text, "\1")
+                end if
+
+                ' heading
+                if len(t[2]) > 0
+                    nodes.push({
+                        kind: "h" + len(t[2]).toStr()
+                        data: text
+                    })
+                    goto flush
+                end if
+
+                ' lists/quote
+                if len(t[3]) > 0
+                    lastPara = invalid
+                    lastCode = invalid
+                    b = t[3]
+                    if b = ">"
+                        kind = "quote"
+                    else if right(b, 1) = "."
+                        kind = "ol"
+                    else
+                        kind = "ul"
+                    end if
+                    if lastList <> invalid and lastList.kind = kind
+                        lastList.data.push(text)
+                    else
+                        lastList = {
+                            kind: kind
+                            data: [text]
+                        }
+                        nodes.push(lastList)
+                    end if
+                    goto loop
+                end if
+
+                ' multiline list entry
+                if lastList <> invalid and lastList.kind <> "quote" and left(t[6], 2) = "  "
+                    last = lastList.data.count() - 1
+                    lastList.data[last] = lastList.data[last] + " " + text
+                    goto loop
+                end if
+
+                ' paragraph
+                lastList = invalid ' bs:disable-line
+                lastCode = invalid ' bs:disable-line
+                if lastPara <> invalid
+                    lastPara.data = lastPara.data + " " + text
+                else
+                    lastPara = {
+                        kind: "p"
+                        data: text
+                    }
+                    nodes.push(lastPara)
+                end if
+
+                goto loop
+            end if
+
+            ' finalize
+            eof:
+            for each node in nodes
+                if node.kind = "quote"
+                    node.data = node.data.join(" ")
+                end if
+            end for
+            return nodes
+        end function
+    }
+end function
