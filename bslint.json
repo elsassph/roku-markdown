@@ -1,3 +1,6 @@
 {
-    "ignores": [ "source/assert_lib.brs" ]
+    "ignores": [
+        "source/assert_lib.brs",
+        "roku_modules/**/*"
+    ]
 }
