@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <component name="Demo" extends="Scene">
     <children>
-        <Renderer id="markdownView" width="1280" height="720" padding="[160, 240]">
+        <Renderer id="markdownView" width="1280" height="720" padding="[160, 240]"
+                h1Color="0xFFFFCC" codeBackground="0x00000022">
             <Font role="font" uri="pkg:/fonts/Ubuntu_Regular.ttf" size="24" />
             <Font role="h1Font" uri="pkg:/fonts/Ubuntu_Bold.ttf" size="48" />
             <Font role="h2Font" uri="pkg:/fonts/Ubuntu_Bold.ttf" size="36" />

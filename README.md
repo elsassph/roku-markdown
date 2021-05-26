@@ -50,15 +50,21 @@ Full interface:
     <field id="padding" type="array" />
     <field id="itemSpacings" type="int" />
     <field id="font" type="node" />
+    <field id="color" type="string" />
     <field id="quoteFont" type="node" />
+    <field id="quoteColor" type="string" />
     <field id="quotePadding" type="array" />
     <field id="quoteBackground" type="string" />
     <field id="codeFont" type="node" />
+    <field id="codeColor" type="string" />
     <field id="codePadding" type="array" />
     <field id="codeBackground" type="string" />
     <field id="h1Font" type="node" />
+    <field id="h1Color" type="string" />
     <field id="h2Font" type="node" />
+    <field id="h2Color" type="string" />
     <field id="h3Font" type="node" />
+    <field id="h3Color" type="string" />
     <field id="scrollTop" type="integer" alias="scroller.scrollTop" />
     <function name="render" />
 </interface>
@@ -70,7 +76,7 @@ Full interface:
 - `[top-bottom, right-left]`
 - `[top, right, bottom, left]`
 
-**Backgrounds** are a RRGGBBAA color string, e.g. `"0xFFFFFF33"`
+**Colors** and **backgrounds** are a RRGGBB or RRGGBBAA color string, e.g. `"0xFFFFFF33"`
 
 ### 2. Parse markdown source and render
 

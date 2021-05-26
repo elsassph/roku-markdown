@@ -34,6 +34,11 @@ function applyDefault(value as dynamic, defaultValue as dynamic) as dynamic
     return value
 end function
 
+function applyDefaultStr(value as dynamic, defaultValue as dynamic) as dynamic
+    if value = invalid or value = "" then return defaultValue
+    return value
+end function
+
 function applyDefaultInt(value as integer, defaultValue as integer) as integer
     if value = 0 then return defaultValue
     return value
@@ -56,18 +61,19 @@ function applyDefaultPadding(values as dynamic, defaultValues as object) as obje
     return values
 end function
 
-function createLabel(text as string, font as object, width as integer) as object
+function createLabel(text as string, font as object, color as string, width as integer) as object
     label = CreateObject("roSGNode", "Label")
     label.update({
         text: text
         font: font
+        color: color
         wrap: width > 0
         width: width
     })
     return label
 end function
 
-function withBackground(child as object, padding as object, width as integer, bgColor as string) as object
+function withBackground(child as object, padding as object, bgColor as string, width as integer) as object
     rect = child.boundingRect()
     block = createObject("roSGNode", "Rectangle")
     block.update({
@@ -98,8 +104,31 @@ function collectFonts() as object
     }
 end function
 
+function collectColors() as object
+    pColor = applyDefaultStr(m.top.color, "0xFFFFFFFF")
+    quoteColor = applyDefaultStr(m.top.quoteColor, pColor)
+    quoteBg = applyDefaultStr(m.top.quoteBackground, "0xFFFFFF22")
+    codeColor = applyDefaultStr(m.top.codeColor, pColor)
+    codeBg = applyDefaultStr(m.top.codeBackground, "0xFFFFFF22")
+    h1Color = applyDefaultStr(m.top.h1Color, pColor)
+    h2Color = applyDefaultStr(m.top.h2Color, pColor)
+    h3Color = applyDefaultStr(m.top.h3Color, pColor)
+
+    return {
+        h1: h1Color
+        h2: h2Color
+        h3: h3Color
+        quote: quoteColor
+        quoteBg: quoteBg
+        code: codeColor
+        codeBg: codeBg
+        p: pColor
+    }
+end function
+
 function createChildren(nodes as object, width as integer) as object
     fonts = collectFonts()
+    colors = collectColors()
     quotePadding = applyDefaultPadding(m.top.quotePadding, [10, 10, 10, 10])
     codePadding = applyDefaultPadding(m.top.codePadding, [10, 10, 10, 50])
 
@@ -108,28 +137,30 @@ function createChildren(nodes as object, width as integer) as object
         if left(node.kind, 1) = "h"
             font = fonts[node.kind]
             if font = invalid then font = fonts.h3Font
-            label = createLabel(node.data, font, 0)
+            color = colors[node.kind]
+            if color = invalid then color = colors.h3Color
+            label = createLabel(node.data, font, color, 0)
             children.push(label)
         else if node.kind = "ul"
-            label = createLabel("- " + node.data.join(chr(10) + "- "), fonts.p, width)
+            label = createLabel("- " + node.data.join(chr(10) + "- "), fonts.p, colors.p, width)
             children.push(label)
         else if node.kind = "ol"
             text = ""
             for i = 0 to node.data.count() - 1
                 text = text + (i + 1).toStr() + ". " + node.data[i] + chr(10)
             end for
-            label = createLabel(text, fonts.p, width)
+            label = createLabel(text, fonts.p, colors.p, width)
             children.push(label)
         else if node.kind = "quote"
-            label = createLabel(node.data, fonts.quote, width)
-            block = withBackground(label, quotePadding, width, "0xFFFFFF33")
+            label = createLabel(node.data, fonts.quote, colors.quote, width)
+            block = withBackground(label, quotePadding, colors.quoteBg, width)
             children.push(block)
         else if node.kind = "code"
-            label = createLabel(node.data, fonts.code, width)
-            block = withBackground(label, codePadding, width, "0xFFFFFF22")
+            label = createLabel(node.data, fonts.code, colors.code, width)
+            block = withBackground(label, codePadding, colors.codeBg, width)
             children.push(block)
         else
-            label = createLabel(node.data, fonts.p, width)
+            label = createLabel(node.data, fonts.p, colors.p, width)
             children.push(label)
         end if
     end for
