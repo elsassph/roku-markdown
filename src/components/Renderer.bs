@@ -10,23 +10,25 @@ sub onFocus()
     end if
 end sub
 
-sub render(nodes as object)
-    itemSpacings = applyDefaultInt(m.top.itemSpacings, 20)
+sub render(nodes as object, scrollable = true as boolean)
+    m.scrollable = scrollable
+
+    itemSpacing = applyDefaultInt(m.top.itemSpacing, 20)
     m.content = CreateObject("roSGNode", "LayoutGroup")
     m.content.layoutDirection = "vert"
-    m.content.itemSpacings = itemSpacings
+    m.content.itemSpacings = [itemSpacing]
 
     padding = applyDefaultPadding(m.top.padding, [0, 0, 0, 0])
     width = m.top.width - padding[1] - padding[3]
     height = m.top.height - padding[0] - padding[2]
 
-    m.children = createChildren(nodes, width)
+    m.children = createChildren(nodes, width, height, itemSpacing)
     m.content.appendChildren(m.children)
 
     m.scroller.width = width
     m.scroller.height = height
     m.scroller.translation = [padding[3], padding[0]]
-    m.scroller@.setContent(m.content)
+    m.scroller@.setContent(m.content, m.scrollable)
 end sub
 
 function applyDefault(value as dynamic, defaultValue as dynamic) as dynamic
@@ -126,11 +128,14 @@ function collectColors() as object
     }
 end function
 
-function createChildren(nodes as object, width as integer) as object
+function createChildren(nodes as object, width as integer, height as integer, itemSpacing as integer) as object
     fonts = collectFonts()
     colors = collectColors()
     quotePadding = applyDefaultPadding(m.top.quotePadding, [10, 10, 10, 10])
     codePadding = applyDefaultPadding(m.top.codePadding, [10, 10, 10, 50])
+
+    checkHeight = not m.scrollable
+    contentHeight = 0
 
     children = []
     for each node in nodes
@@ -162,6 +167,14 @@ function createChildren(nodes as object, width as integer) as object
         else
             label = createLabel(node.data, fonts.p, colors.p, width)
             children.push(label)
+        end if
+        if checkHeight
+            last = children.peek()
+            if last <> invalid
+                rect = last.boundingRect()
+                contentHeight += rect.height + itemSpacing
+                if contentHeight > height then exit for
+            end if
         end if
     end for
     return children

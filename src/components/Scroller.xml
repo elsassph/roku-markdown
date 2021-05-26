@@ -5,7 +5,8 @@
         <field id="height" type="int" />
         <field id="animatedScrolling" type="bool" value="true" />
         <field id="scrollStep" type="int" />
-        <field id="scrollTop" type="int" value="0" onChange="applyScrolling" />
+        <field id="scrollFraction" type="float" />
+        <field id="scrollRatio" type="float" />
         <function name="setContent" />
     </interface>
 

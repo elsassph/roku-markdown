@@ -24,4 +24,17 @@ sub init()
     view = m.top.findNode("markdownView")
     view@.render(blocks)
     view.setFocus(true)
+
+    ' render a scrollbar following scrolling
+    m.scrollbar = m.top.findNode("scrollbar")
+    m.scrollbar.height = int(400 * view.scrollRatio)
+    view.observeField("scrollFraction", "onScrolled")
+end sub
+
+sub onScrolled(event as object)
+    scrollFraction = event.getData()
+    m.scrollbar.translation = [
+        1046,
+        int(160 + (400 - m.scrollbar.height) * scrollFraction)
+    ]
 end sub

@@ -5,7 +5,7 @@ sub init()
     m.scrollTarget = invalid
 end sub
 
-sub setContent(node as object)
+sub setContent(node as object, scrollable as boolean)
     if m.scrollTarget <> invalid
         m.clipArea.removeChild(m.scrollTarget)
         m.scrollTarget = invalid
@@ -19,29 +19,36 @@ sub setContent(node as object)
     m.clipArea.clippingRect = [0, 0, width, height]
     m.clipArea.appendChild(m.scrollTarget)
 
+    m.scrollable = scrollable
     m.scrollTop = 0
     m.animatedScrolling = m.top.animatedScrolling
-    m.maxScroll = m.scrollTarget.boundingRect().height - height
-    if m.maxScroll < 0 then m.maxScroll = 0
-    m.scrollStep = m.top.scrollStep
-    if m.scrollStep = 0 then m.scrollStep = int(height / 3)
+
+    if scrollable
+        m.maxScroll = m.scrollTarget.boundingRect().height - height
+        if m.maxScroll < 0 then m.maxScroll = 0
+        m.scrollStep = m.top.scrollStep
+        if m.scrollStep = 0 then m.scrollStep = int(height / 3)
+        m.top.scrollRatio = height / (height + m.maxScroll)
+    else
+        m.maxScroll = 0
+        m.scrollStep = 0
+        m.top.scrollRatio = 1
+    end if
+    m.top.scrollFraction = 0
 end sub
 
 sub scrollBy(distance as integer)
+    if m.maxScroll = 0 then return
+
     ' calculate target position
-    prevTop = m.top.scrollTop
+    prevTop = m.scrollTop
     target = prevTop + distance
     if target < 20 ' snap to boundaries
         target = 0
     else if target > m.maxScroll - 20
         target = m.maxScroll
     end if
-    m.top.scrollTop = target
-end sub
-
-sub applyScrolling(event as object)
-    if m.scrollTarget = invalid then return
-    target = event.getData()
+    m.scrollTop = target
 
     ' update translation
     if m.animatedScrolling
@@ -54,10 +61,12 @@ sub applyScrolling(event as object)
     else
         m.scrollTarget.translation = [0, -target]
     end if
+
+    m.top.scrollFraction = target / m.maxScroll
 end sub
 
 function onKeyEvent(key as string, press as boolean) as boolean
-    if not press then return false
+    if not press or not m.scrollable then return false
     if key = "down"
         scrollBy(m.scrollStep)
         return true

@@ -7,5 +7,6 @@
             <Font role="h1Font" uri="pkg:/fonts/Ubuntu_Bold.ttf" size="48" />
             <Font role="h2Font" uri="pkg:/fonts/Ubuntu_Bold.ttf" size="36" />
         </Renderer>
+        <Rectangle id="scrollbar" translation="[1046, 160]" width="10" height="0" color="0xFFFFFF" />
     </children>
 </component>

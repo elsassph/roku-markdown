@@ -2,6 +2,8 @@
 
 This is a **simple markdown renderer** for Roku apps written in [BrighterScript](https://github.com/rokucommunity/brighterscript).
 
+![Screenshot of the markdown demo app](screenshot.png)
+
 Parser and renderer support a subset of the markdown spec, and strip all inline styles.
 The goal is to eventually support images between paragraphs.
 
@@ -48,7 +50,7 @@ Full interface:
     <field id="width" type="int" />
     <field id="height" type="int" />
     <field id="padding" type="array" />
-    <field id="itemSpacings" type="int" />
+    <field id="itemSpacing" type="int" />
     <field id="font" type="node" />
     <field id="color" type="string" />
     <field id="quoteFont" type="node" />
@@ -65,7 +67,9 @@ Full interface:
     <field id="h2Color" type="string" />
     <field id="h3Font" type="node" />
     <field id="h3Color" type="string" />
-    <field id="scrollTop" type="integer" alias="scroller.scrollTop" />
+    <field id="animatedScrolling" type="boolean" alias="scroller.animatedScrolling" />
+    <field id="scrollFraction" type="integer" alias="scroller.scrollFraction" />
+    <field id="scrollRatio" type="integer" alias="scroller.scrollRatio" />
     <function name="render" />
 </interface>
 ```
@@ -90,6 +94,22 @@ view.callfunc("render", data)
 ' view is scrollable and can be focused
 view.setFocus(true)
 ```
+
+If you want an optimised non-interactive clipped render:
+
+```vbscript
+view.callfunc("render", data, false)
+' view isn't scrollable anymore
+```
+
+### 3. Render scrolling decorations
+
+This component will not render a scrollbar:
+
+- you can observe `scrollFraction` to know the state of the scrolling,
+- you can use `scrollRatio` to know how much of the content is visible VS hidden.
+
+See the repository demo for an example rendering a scrollbar.
 
 ## Building from source
 
