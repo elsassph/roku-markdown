@@ -76,6 +76,7 @@ Full interface:
     <field id="animatedScrolling" type="boolean" alias="scroller.animatedScrolling" />
     <field id="scrollFraction" type="integer" alias="scroller.scrollFraction" />
     <field id="scrollRatio" type="integer" alias="scroller.scrollRatio" />
+    <field id="overflows" type="boolean" />
     <function name="render" />
 </interface>
 ```
@@ -94,8 +95,10 @@ Titles after H3 are all rendered as H3.
 
 ### 2. Parse markdown source and render
 
+**Vanilla BrightScript version**
+
 ```vbscript
-parser = new rokumarkdown_Parser()
+parser = rokumarkdown_Parser()
 data = parser.parse(markdownSrc)
 
 view = m.top.findNode("markdownView")
@@ -112,10 +115,31 @@ view.callfunc("render", data, false)
 ' view isn't scrollable anymore
 ```
 
+**BrighterScript version**
+
+```vbscript
+parser = new rokumarkdown_Parser()
+data = parser.parse(markdownSrc)
+
+view = m.top.findNode("markdownView")
+view@.render(data)
+
+' view is scrollable and can be focused
+view.setFocus(true)
+```
+
+If you want an optimised non-interactive clipped render:
+
+```vbscript
+view@.render(data, false)
+' view isn't scrollable anymore
+```
+
 ### 3. Render scrolling decorations
 
 This component will not render a scrollbar:
 
+- `overflows` tells whether the content is bigger than the view,
 - you can observe `scrollFraction` to know the state of the scrolling,
 - you can use `scrollRatio` to know how much of the content is visible VS hidden.
 

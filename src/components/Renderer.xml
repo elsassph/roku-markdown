@@ -30,6 +30,7 @@
         <field id="animatedScrolling" type="boolean" alias="scroller.animatedScrolling" />
         <field id="scrollFraction" type="integer" alias="scroller.scrollFraction" />
         <field id="scrollRatio" type="integer" alias="scroller.scrollRatio" />
+        <field id="overflows" type="boolean" />
         <function name="render" />
     </interface>
 

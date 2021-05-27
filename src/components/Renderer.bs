@@ -154,7 +154,7 @@ function createChildren(nodes as object, width as integer, height as integer, it
     quotePadding = applyDefaultPadding(m.top.quotePadding, [10, 10, 10, 10])
     codePadding = applyDefaultPadding(m.top.codePadding, [10, 10, 10, 50])
 
-    checkHeight = not m.scrollable
+    checkHeight = true
     contentHeight = 0
 
     children = []
@@ -192,7 +192,10 @@ function createChildren(nodes as object, width as integer, height as integer, it
             if last <> invalid
                 rect = last.boundingRect()
                 contentHeight += rect.height + itemSpacing
-                if contentHeight > height then exit for
+                if contentHeight > height
+                    m.top.overflows = true
+                    if not m.scrollable then exit for
+                end if
             end if
         end if
     end for
