@@ -53,20 +53,26 @@ Full interface:
     <field id="itemSpacing" type="int" />
     <field id="font" type="node" />
     <field id="color" type="string" />
+    <field id="align" type="string" />
     <field id="quoteFont" type="node" />
     <field id="quoteColor" type="string" />
+    <field id="quoteAlign" type="string" />
     <field id="quotePadding" type="array" />
     <field id="quoteBackground" type="string" />
     <field id="codeFont" type="node" />
     <field id="codeColor" type="string" />
+    <field id="codeAlign" type="string" />
     <field id="codePadding" type="array" />
     <field id="codeBackground" type="string" />
     <field id="h1Font" type="node" />
     <field id="h1Color" type="string" />
+    <field id="h1Align" type="string" />
     <field id="h2Font" type="node" />
     <field id="h2Color" type="string" />
+    <field id="h2Align" type="string" />
     <field id="h3Font" type="node" />
     <field id="h3Color" type="string" />
+    <field id="h3Align" type="string" />
     <field id="animatedScrolling" type="boolean" alias="scroller.animatedScrolling" />
     <field id="scrollFraction" type="integer" alias="scroller.scrollFraction" />
     <field id="scrollRatio" type="integer" alias="scroller.scrollRatio" />
@@ -81,6 +87,10 @@ Full interface:
 - `[top, right, bottom, left]`
 
 **Colors** and **backgrounds** are a RRGGBB or RRGGBBAA color string, e.g. `"0xFFFFFF33"`
+
+**Alignments** are Label horizontal alignement values (`left|center|right`)
+
+Titles after H3 are all rendered as H3.
 
 ### 2. Parse markdown source and render
 
