@@ -8,12 +8,14 @@ class Parser
     private reLineToken = createObject("roRegex", "^(\n*)(?:([#]+)|(?:([>*+-]|\d+\.)[ \t]+)|(\t|[ ]{4})|(```))?(.*)$", "gm")
     private reStyle = createObject("roRegex", "([`*_]+\b)|(\b[`*_]+)", "g")
     private reLink = createObject("roRegex", "\[([^]]+)\]\([^)]*\)", "g")
+    private reHR = createObject("roRegex", "^[*=_-]{3,}$", "")
 
     function parse(source as string) as object
         nodes = []
         reLineToken = m.reLineToken
         reStyle = m.reStyle
         reLink = m.reLink
+        reHR = m.reHR
         isBackTick = false
 
         ' sanitize
@@ -139,9 +141,20 @@ class Parser
                 goto loop
             end if
 
-            ' paragraph
             lastList = invalid
             lastCode = invalid
+
+            ' horizontal rule
+            if reHR.isMatch(text)
+                lastPara = invalid
+                nodes.push({
+                    kind: "hr"
+                    data: text
+                })
+                goto loop
+            end if
+
+            ' paragraph
             if lastPara <> invalid
                 lastPara.data = lastPara.data + " " + text
             else

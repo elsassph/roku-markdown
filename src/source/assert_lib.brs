@@ -4,9 +4,9 @@ function GetAssert()
     return RocaAssert(sub()
         print "PASS"
     end sub, sub(err)
-        print err.error
-        print err.found
-        print err.wanted
+        print err.error.message
+        print "Expected: "; FormatJson(err.wanted.value)
+        print "Actual: "; FormatJson(err.found.value)
         throw "FAIL"
     end sub, {})
 end function

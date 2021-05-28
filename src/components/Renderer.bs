@@ -89,6 +89,22 @@ function withBackground(child as object, padding as object, bgColor as string, w
     return block
 end function
 
+function createHr(color as string, size as integer, spacing as integer, width as integer) as object
+    block = createObject("roSGNode", "Rectangle")
+    block.update({
+        width: 1
+        height: spacing * 2
+        color: "#00000000"
+    })
+    hr = block.createChild("Rectangle")
+    hr.update({
+        width: width
+        height: size
+        translation: [0, int(spacing - size / 2)]
+    })
+    return block
+end function
+
 function collectFonts() as object
     pFont = applyDefault(m.top.font, "font:SmallSystemFont")
     quoteFont = applyDefault(m.top.quoteFont, pFont)
@@ -116,8 +132,10 @@ function collectColors() as object
     h1Color = applyDefaultStr(m.top.h1Color, pColor)
     h2Color = applyDefaultStr(m.top.h2Color, pColor)
     h3Color = applyDefaultStr(m.top.h3Color, pColor)
+    hrColor = applyDefaultStr(m.top.hrColor, pColor)
 
     return {
+        p: pColor
         h1: h1Color
         h2: h2Color
         h3: h3Color
@@ -125,7 +143,7 @@ function collectColors() as object
         quoteBg: quoteBg
         code: codeColor
         codeBg: codeBg
-        p: pColor
+        hr: hrColor
     }
 end function
 
@@ -138,12 +156,12 @@ function collectAligns() as object
     h3Align = applyDefaultStr(m.top.h3Align, pAlign)
 
     return {
+        p: pAlign
         h1: h1Align
         h2: h2Align
         h3: h3Align
         quote: quoteAlign
         code: codeAlign
-        p: pAlign
     }
 end function
 
@@ -153,38 +171,44 @@ function createChildren(nodes as object, width as integer, height as integer, it
     aligns = collectAligns()
     quotePadding = applyDefaultPadding(m.top.quotePadding, [10, 10, 10, 10])
     codePadding = applyDefaultPadding(m.top.codePadding, [10, 10, 10, 50])
+    hrSize = applyDefaultInt(m.top.hrSize, 2)
 
     checkHeight = true
     contentHeight = 0
 
     children = []
     for each node in nodes
-        if left(node.kind, 1) = "h"
-            font = applyDefault(fonts[node.kind], fonts.h3)
-            color = applyDefault(colors[node.kind], colors.h3)
-            align = applyDefault(aligns[node.kind], aligns.h3)
-            label = createLabel(node.data, font, color, align, width)
+        kind = node.kind
+        data = node.data
+        if kind = "hr"
+            block = createHr(colors.hr, hrSize, itemSpacing, width)
+            children.push(block)
+        else if left(kind, 1) = "h"
+            font = applyDefault(fonts[kind], fonts.h3)
+            color = applyDefault(colors[kind], colors.h3)
+            align = applyDefault(aligns[kind], aligns.h3)
+            label = createLabel(data, font, color, align, width)
             children.push(label)
-        else if node.kind = "ul"
-            label = createLabel(" •  " + node.data.join(chr(10) + " •  "), fonts.p, colors.p, aligns.p, width)
+        else if kind = "ul"
+            label = createLabel(" •  " + data.join(chr(10) + " •  "), fonts.p, colors.p, aligns.p, width)
             children.push(label)
-        else if node.kind = "ol"
+        else if kind = "ol"
             text = ""
-            for i = 0 to node.data.count() - 1
-                text = text + " " + (i + 1).toStr() + ". " + node.data[i] + chr(10)
+            for i = 0 to data.count() - 1
+                text = text + " " + (i + 1).toStr() + ". " + data[i] + chr(10)
             end for
             label = createLabel(text, fonts.p, colors.p, aligns.p, width)
             children.push(label)
-        else if node.kind = "quote"
-            label = createLabel(node.data, fonts.quote, colors.quote, aligns.quote, width)
+        else if kind = "quote"
+            label = createLabel(data, fonts.quote, colors.quote, aligns.quote, width)
             block = withBackground(label, quotePadding, colors.quoteBg, width)
             children.push(block)
-        else if node.kind = "code"
-            label = createLabel(node.data, fonts.code, colors.code, aligns.code, width)
+        else if kind = "code"
+            label = createLabel(data, fonts.code, colors.code, aligns.code, width)
             block = withBackground(label, codePadding, colors.codeBg, width)
             children.push(block)
         else
-            label = createLabel(node.data, fonts.p, colors.p, aligns.p, width)
+            label = createLabel(data, fonts.p, colors.p, aligns.p, width)
             children.push(label)
         end if
         if checkHeight

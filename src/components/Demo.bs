@@ -12,6 +12,7 @@ sub init()
     source = source + "1. Steal underpants" + NL
     source = source + "2. ..." + NL
     source = source + "3. Profit!" + NL
+    source = source + "---" + NL
     source = source + "> It's amazing!!" + NL
     source = source + "> (they say)" + NL + NL
     source = source + "> Though it doesn't handle inline styles" + NL

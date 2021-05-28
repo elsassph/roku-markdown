@@ -6,6 +6,31 @@ sub Parser_spec()
 
     ' CASES
 
+    print "Parses horizontal rules"
+    nodes = md.parse("First line" + chr(10) + "---" + chr(10) + "Second line" + chr(10) + "******" + chr(10) + "Third line")
+    assert.deepEquals(nodes, [
+        {
+            kind: "p"
+            data: "First line"
+        },
+        {
+            kind: "hr"
+            data: "---"
+        },
+        {
+            kind: "p"
+            data: "Second line"
+        },
+        {
+            kind: "hr"
+            data: "******"
+        },
+        {
+            kind: "p"
+            data: "Third line"
+        }
+    ], "Nodes do not match")
+
     print "Parses code (backticks)"
     nodes = md.parse("Instructions:" + chr(10) + "```" + chr(10) + "npm install" + chr(10) + "    npm run _dev_" + chr(10) + "```" + chr(10) + "And enjoy")
     assert.deepEquals(nodes, [
