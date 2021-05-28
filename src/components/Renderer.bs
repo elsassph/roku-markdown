@@ -112,11 +112,13 @@ function collectFonts() as object
     h1Font = applyDefault(m.top.h1Font, "font:LargeBoldSystemFont")
     h2Font = applyDefault(m.top.h2Font, "font:MediumBoldSystemFont")
     h3Font = applyDefault(m.top.h3Font, "font:SmallBoldSystemFont")
+    h4Font = applyDefault(m.top.h4Font, "font:SmallBoldSystemFont")
 
     return {
         h1: h1Font
         h2: h2Font
         h3: h3Font
+        h4: h4Font
         quote: quoteFont
         code: codeFont
         p: pFont
@@ -132,6 +134,7 @@ function collectColors() as object
     h1Color = applyDefaultStr(m.top.h1Color, pColor)
     h2Color = applyDefaultStr(m.top.h2Color, pColor)
     h3Color = applyDefaultStr(m.top.h3Color, pColor)
+    h4Color = applyDefaultStr(m.top.h4Color, pColor)
     hrColor = applyDefaultStr(m.top.hrColor, pColor)
 
     return {
@@ -139,6 +142,7 @@ function collectColors() as object
         h1: h1Color
         h2: h2Color
         h3: h3Color
+        h4: h4Color
         quote: quoteColor
         quoteBg: quoteBg
         code: codeColor
@@ -154,12 +158,14 @@ function collectAligns() as object
     h1Align = applyDefaultStr(m.top.h1Align, pAlign)
     h2Align = applyDefaultStr(m.top.h2Align, pAlign)
     h3Align = applyDefaultStr(m.top.h3Align, pAlign)
+    h4Align = applyDefaultStr(m.top.h4Align, pAlign)
 
     return {
         p: pAlign
         h1: h1Align
         h2: h2Align
         h3: h3Align
+        h4: h4Align
         quote: quoteAlign
         code: codeAlign
     }
@@ -184,9 +190,9 @@ function createChildren(nodes as object, width as integer, height as integer, it
             block = createHr(colors.hr, hrSize, itemSpacing, width)
             children.push(block)
         else if left(kind, 1) = "h"
-            font = applyDefault(fonts[kind], fonts.h3)
-            color = applyDefault(colors[kind], colors.h3)
-            align = applyDefault(aligns[kind], aligns.h3)
+            font = applyDefault(fonts[kind], fonts.h4)
+            color = applyDefault(colors[kind], colors.h4)
+            align = applyDefault(aligns[kind], aligns.h4)
             label = createLabel(data, font, color, align, width)
             children.push(label)
         else if kind = "ul"

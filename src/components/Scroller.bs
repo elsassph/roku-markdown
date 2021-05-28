@@ -37,8 +37,8 @@ sub setContent(node as object, scrollable as boolean)
     m.top.scrollFraction = 0
 end sub
 
-sub scrollBy(distance as integer)
-    if m.maxScroll = 0 then return
+function scrollBy(distance as integer) as boolean
+    if m.maxScroll = 0 then return false
 
     ' calculate target position
     prevTop = m.scrollTop
@@ -48,6 +48,7 @@ sub scrollBy(distance as integer)
     else if target > m.maxScroll - 20
         target = m.maxScroll
     end if
+    if target = prevTop then return false
     m.scrollTop = target
 
     ' update translation
@@ -63,16 +64,15 @@ sub scrollBy(distance as integer)
     end if
 
     m.top.scrollFraction = target / m.maxScroll
-end sub
+    return true
+end function
 
 function onKeyEvent(key as string, press as boolean) as boolean
     if not press or not m.scrollable then return false
     if key = "down"
-        scrollBy(m.scrollStep)
-        return true
+        return scrollBy(m.scrollStep)
     else if key = "up"
-        scrollBy(-m.scrollStep)
-        return true
+        return scrollBy(-m.scrollStep)
     end if
     return false
 end function
