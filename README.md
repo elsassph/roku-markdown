@@ -43,9 +43,9 @@ See `demo.bs` in the repository sources for an example of usage.
 <rokumarkdown_Renderer id="markdownView" />
 ```
 
-Optionally you can redefine some/all the fonts:
+You can redefine some/all the fonts and colors/alignments:
 ```xml
-<rokumarkdown_Renderer id="markdownView">
+<rokumarkdown_Renderer id="markdownView" color="#FFFFCC" h1Align="center">
     <Font role="font" uri="pkg:/fonts/Ubuntu_Regular.ttf" size="24" />
     <Font role="h1Font" uri="pkg:/fonts/Ubuntu_Bold.ttf" size="48" />
     <Font role="h2Font" uri="pkg:/fonts/Ubuntu_Bold.ttf" size="36" />
@@ -104,7 +104,7 @@ Full interface:
 
 **Alignments** are Label horizontal alignement values (`left|center|right`)
 
-Titles after H3 are all rendered as H3.
+Titles after H4 are all rendered as H4.
 
 ### 2. Parse markdown source and render
 
