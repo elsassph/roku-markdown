@@ -76,6 +76,8 @@ Full interface:
     <field id="h4Font" type="node" />
     <field id="h4Color" type="string" />
     <field id="h4Align" type="string" />
+    <field id="hrColor" type="string" />
+    <field id="hrSize" type="int" />
     <field id="animatedScrolling" type="boolean" alias="scroller.animatedScrolling" />
     <field id="scrollFraction" type="integer" alias="scroller.scrollFraction" />
     <field id="scrollRatio" type="integer" alias="scroller.scrollRatio" />
