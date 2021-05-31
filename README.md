@@ -7,7 +7,15 @@ This is a **simple markdown renderer** for Roku apps written in [BrighterScript]
 Parser and renderer support a subset of the markdown spec, and strip all inline styles.
 The goal is to eventually support images between paragraphs.
 
-There is currently no plan to support full text styling.
+There is currently no plan to support full text styling, but might consider tables.
+
+Current support:
+
+- titles, using `# Title` syntax
+- paragraphs
+- code blocks, using triple-tick or indentation
+- quote blocks, using `> That quote`
+- horizontal rules, using 3+ characters of `-=*`
 
 ## Installation
 
@@ -92,7 +100,7 @@ Full interface:
 - `[top-bottom, right-left]`
 - `[top, right, bottom, left]`
 
-**Colors** and **backgrounds** are a RRGGBB or RRGGBBAA color string, e.g. `"0xFFFFFF33"`
+**Colors** and **backgrounds** are Roku RRGGBB or RRGGBBAA color string, e.g. `"#FFFFFF33"`
 
 **Alignments** are Label horizontal alignement values (`left|center|right`)
 
