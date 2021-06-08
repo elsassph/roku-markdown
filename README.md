@@ -100,7 +100,12 @@ Full interface:
 - `[top-bottom, right-left]`
 - `[top, right, bottom, left]`
 
-**Colors** and **backgrounds** are Roku RRGGBB or RRGGBBAA color string, e.g. `"#FFFFFF33"`
+**Colors** are Roku RRGGBB or RRGGBBAA color string, e.g. `"#FFFFFF33"`
+
+**Backgrounds** are:
+
+- either Roku RRGGBB or RRGGBBAA color string, e.g. `"#FFFFFF33"`,
+- or a custom Roku component; the size is provided through `size` field (`[width, height]`), and the text label is appended as a child (see demo).
 
 **Alignments** are Label horizontal alignement values (`left|center|right`)
 
