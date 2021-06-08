@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="CustomQuote" extends="Group">
+    <interface>
+        <field id="size" type="array" onChange="onSizeChanged" />
+    </interface>
+    <children>
+        <Rectangle id="line" color="#FFFFFF33" width="6" height="0" />
+    </children>
+</component>

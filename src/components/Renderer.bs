@@ -76,14 +76,24 @@ function createLabel(text as string, font as object, color as string, align as s
     return label
 end function
 
+function isIdentifier(s) as boolean
+    return s <> invalid and s <> "" and left(s, 1) <> "#" and left(s, 2) <> "0x"
+end function
+
 function withBackground(child as object, padding as object, bgColor as string, width as integer) as object
     rect = child.boundingRect()
-    block = createObject("roSGNode", "Rectangle")
-    block.update({
-        width: width
-        height: rect.height + padding[0] + padding[2]
-        color: bgColor
-    })
+    height = rect.height + padding[0] + padding[2]
+    if isIdentifier(lcase(bgColor))
+        block = createObject("roSGNode", bgColor)
+        block.size = [width, height]
+    else
+        block = createObject("roSGNode", "Rectangle")
+        block.update({
+            width: width
+            height: height
+            color: bgColor
+        })
+    end if
     child.translation = [padding[3], padding[0]]
     block.appendChild(child)
     return block
