@@ -216,11 +216,13 @@ function createChildren(nodes as object, width as integer, height as integer, it
             label = createLabel(text, fonts.p, colors.p, aligns.p, width)
             children.push(label)
         else if kind = "quote"
-            label = createLabel(data, fonts.quote, colors.quote, aligns.quote, width)
+            innerWidth = width - quotePadding[1] - quotePadding[3]
+            label = createLabel(data, fonts.quote, colors.quote, aligns.quote, innerWidth)
             block = withBackground(label, quotePadding, colors.quoteBg, width)
             children.push(block)
         else if kind = "code"
-            label = createLabel(data, fonts.code, colors.code, aligns.code, width)
+            innerWidth = width - codePadding[1] - codePadding[3]
+            label = createLabel(data, fonts.code, colors.code, aligns.code, innerWidth)
             block = withBackground(label, codePadding, colors.codeBg, width)
             children.push(block)
         else
