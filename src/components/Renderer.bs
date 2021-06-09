@@ -193,10 +193,14 @@ function createChildren(nodes as object, width as integer, height as integer, it
     contentHeight = 0
 
     children = []
-    for each node in nodes
+    count = nodes.count() - 1
+    for i = 0 to count
+        node = nodes[i]
         kind = node.kind
         data = node.data
+
         if kind = "hr"
+            label = invalid
             block = createHr(colors.hr, hrSize, itemSpacing, width)
             children.push(block)
         else if left(kind, 1) = "h"
@@ -210,8 +214,8 @@ function createChildren(nodes as object, width as integer, height as integer, it
             children.push(label)
         else if kind = "ol"
             text = ""
-            for i = 0 to data.count() - 1
-                text = text + " " + (i + 1).toStr() + ". " + data[i] + chr(10)
+            for j = 0 to data.count() - 1
+                text = text + " " + (j + 1).toStr() + ". " + data[j] + chr(10)
             end for
             label = createLabel(text, fonts.p, colors.p, aligns.p, width)
             children.push(label)
@@ -229,14 +233,31 @@ function createChildren(nodes as object, width as integer, height as integer, it
             label = createLabel(data, fonts.p, colors.p, aligns.p, width)
             children.push(label)
         end if
+
+        ' overflow check
         if checkHeight
             last = children.peek()
             if last <> invalid
                 rect = last.boundingRect()
-                contentHeight += rect.height + itemSpacing
-                if contentHeight > height
+                prevHeight = contentHeight
+                contentHeight += rect.height
+                if contentHeight > height and kind <> "hr" ' block overflows
+                    checkHeight = false
                     m.top.overflows = true
-                    if not m.scrollable then exit for
+                    if not m.scrollable
+                        if label <> invalid ' text ellipsis
+                            label.ellipsizeOnBoundary = true
+                            label.height = height - prevHeight
+                        end if
+                        exit for
+                    end if
+                else ' next block may be off screen
+                    contentHeight += itemSpacing
+                    if contentHeight > height and i < count
+                        checkHeight = false
+                        m.top.overflows = true
+                        if not m.scrollable then exit for
+                    end if
                 end if
             end if
         end if

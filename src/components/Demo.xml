@@ -3,8 +3,9 @@
     <children>
         <Renderer
             id="markdownView"
-            width="1280" height="720"
-            padding="[160, 240]"
+            width="1280" height="400"
+            padding="[0, 240]"
+            translation="[0, 40]"
             h1Color="0xFFFFCC"
             h1Align="center"
             codeBackground="0x00000022"
@@ -14,6 +15,12 @@
             <Font role="h1Font" uri="pkg:/fonts/Ubuntu_Bold.ttf" size="48" />
             <Font role="h2Font" uri="pkg:/fonts/Ubuntu_Bold.ttf" size="36" />
         </Renderer>
-        <Rectangle id="scrollbar" translation="[1046, 160]" width="10" height="0" color="0xFFFFFF" />
+        <Rectangle id="scrollbar" translation="[1046, 40]" width="10" height="0" color="0xFFFFFF" />
+
+        <Renderer
+            id="markdownView2"
+            width="800" height="200"
+            translation="[240, 480]"
+        />
     </children>
 </component>
