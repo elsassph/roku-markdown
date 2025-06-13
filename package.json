@@ -13,9 +13,9 @@
   ],
   "license": "MIT",
   "devDependencies": {
-    "@rokucommunity/bslint": "^0.4.0",
-    "brighterscript": "^0.39.1",
-    "ropm": "^0.9.1"
+    "@rokucommunity/bslint": "^0.8.32",
+    "brighterscript": "^0.69.10",
+    "ropm": "^0.10.34"
   },
   "files": [
     "dist/components/Renderer.*",

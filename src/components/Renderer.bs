@@ -66,11 +66,11 @@ end function
 function createLabel(text as string, font as object, color as string, align as string, width as integer) as object
     label = CreateObject("roSGNode", "Label")
     label.update({
-        text: text
-        font: font
-        color: color
-        horizAlign: align
-        wrap: width > 0
+        text: text,
+        font: font,
+        color: color,
+        horizAlign: align,
+        wrap: width > 0,
         width: width
     })
     return label
@@ -89,8 +89,8 @@ function withBackground(child as object, padding as object, bgColor as string, w
     else
         block = createObject("roSGNode", "Rectangle")
         block.update({
-            width: width
-            height: height
+            width: width,
+            height: height,
             color: bgColor
         })
     end if
@@ -102,14 +102,14 @@ end function
 function createHr(color as string, size as integer, spacing as integer, width as integer) as object
     block = createObject("roSGNode", "Rectangle")
     block.update({
-        width: 1
-        height: spacing * 2
+        width: 1,
+        height: spacing * 2,
         color: "#00000000"
     })
     hr = block.createChild("Rectangle")
     hr.update({
-        width: width
-        height: size
+        width: width,
+        height: size,
         translation: [0, int(spacing - size / 2)]
     })
     return block
@@ -125,12 +125,12 @@ function collectFonts() as object
     h4Font = applyDefault(m.top.h4Font, "font:SmallBoldSystemFont")
 
     return {
-        h1: h1Font
-        h2: h2Font
-        h3: h3Font
-        h4: h4Font
-        quote: quoteFont
-        code: codeFont
+        h1: h1Font,
+        h2: h2Font,
+        h3: h3Font,
+        h4: h4Font,
+        quote: quoteFont,
+        code: codeFont,
         p: pFont
     }
 end function
@@ -148,15 +148,15 @@ function collectColors() as object
     hrColor = applyDefaultStr(m.top.hrColor, pColor)
 
     return {
-        p: pColor
-        h1: h1Color
-        h2: h2Color
-        h3: h3Color
-        h4: h4Color
-        quote: quoteColor
-        quoteBg: quoteBg
-        code: codeColor
-        codeBg: codeBg
+        p: pColor,
+        h1: h1Color,
+        h2: h2Color,
+        h3: h3Color,
+        h4: h4Color,
+        quote: quoteColor,
+        quoteBg: quoteBg,
+        code: codeColor,
+        codeBg: codeBg,
         hr: hrColor
     }
 end function
@@ -171,12 +171,12 @@ function collectAligns() as object
     h4Align = applyDefaultStr(m.top.h4Align, pAlign)
 
     return {
-        p: pAlign
-        h1: h1Align
-        h2: h2Align
-        h3: h3Align
-        h4: h4Align
-        quote: quoteAlign
+        p: pAlign,
+        h1: h1Align,
+        h2: h2Align,
+        h3: h3Align,
+        h4: h4Align,
+        quote: quoteAlign,
         code: codeAlign
     }
 end function

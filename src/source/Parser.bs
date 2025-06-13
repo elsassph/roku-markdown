@@ -48,7 +48,7 @@ class Parser
                     lastCode.data = lastCode.data + chr(10) + t[0]
                 else
                     lastCode = {
-                        kind: "code"
+                        kind: "code",
                         data: t[0]
                     }
                     nodes.push(lastCode)
@@ -73,7 +73,7 @@ class Parser
                     lastCode.data = lastCode.data + chr(10) + t[6]
                 else
                     lastCode = {
-                        kind: "code"
+                        kind: "code",
                         data: t[6]
                     }
                     nodes.push(lastCode)
@@ -104,7 +104,7 @@ class Parser
             ' heading
             if len(t[2]) > 0
                 nodes.push({
-                    kind: "h" + len(t[2]).toStr()
+                    kind: "h" + len(t[2]).toStr(),
                     data: text
                 })
                 goto flush
@@ -126,7 +126,7 @@ class Parser
                     lastList.data.push(text)
                 else
                     lastList = {
-                        kind: kind
+                        kind: kind,
                         data: [text]
                     }
                     nodes.push(lastList)
@@ -148,7 +148,7 @@ class Parser
             if reHR.isMatch(text)
                 lastPara = invalid
                 nodes.push({
-                    kind: "hr"
+                    kind: "hr",
                     data: text
                 })
                 goto loop
@@ -159,7 +159,7 @@ class Parser
                 lastPara.data = lastPara.data + " " + text
             else
                 lastPara = {
-                    kind: "p"
+                    kind: "p",
                     data: text
                 }
                 nodes.push(lastPara)
