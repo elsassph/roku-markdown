@@ -1,3 +1,5 @@
+import "./NodeKind.bs"
+
 ' Simplified Markdown parser
 ' - lines: https://regex101.com/r/trs5vm/5
 ' - styles: https://regex101.com/r/nEsAGD/1
@@ -48,7 +50,7 @@ class Parser
                     lastCode.data = lastCode.data + chr(10) + t[0]
                 else
                     lastCode = {
-                        kind: "code",
+                        kind: NodeKind.code,
                         data: t[0]
                     }
                     nodes.push(lastCode)
@@ -73,7 +75,7 @@ class Parser
                     lastCode.data = lastCode.data + chr(10) + t[6]
                 else
                     lastCode = {
-                        kind: "code",
+                        kind: NodeKind.code,
                         data: t[6]
                     }
                     nodes.push(lastCode)
@@ -116,11 +118,11 @@ class Parser
                 lastCode = invalid
                 b = t[3]
                 if b = ">"
-                    kind = "quote"
+                    kind = NodeKind.quote
                 else if right(b, 1) = "."
-                    kind = "ol"
+                    kind = NodeKind.ol
                 else
-                    kind = "ul"
+                    kind = NodeKind.ul
                 end if
                 if lastList <> invalid and lastList.kind = kind
                     lastList.data.push(text)
@@ -135,7 +137,7 @@ class Parser
             end if
 
             ' multiline list entry
-            if lastList <> invalid and lastList.kind <> "quote" and left(t[6], 2) = "  "
+            if lastList <> invalid and lastList.kind <> NodeKind.quote and left(t[6], 2) = "  "
                 last = lastList.data.count() - 1
                 lastList.data[last] = lastList.data[last] + " " + text
                 goto loop
@@ -148,7 +150,7 @@ class Parser
             if reHR.isMatch(text)
                 lastPara = invalid
                 nodes.push({
-                    kind: "hr",
+                    kind: NodeKind.hr,
                     data: text
                 })
                 goto loop
@@ -159,7 +161,7 @@ class Parser
                 lastPara.data = lastPara.data + " " + text
             else
                 lastPara = {
-                    kind: "p",
+                    kind: NodeKind.p,
                     data: text
                 }
                 nodes.push(lastPara)
@@ -175,7 +177,7 @@ class Parser
         lastCode = invalid ' bs:disable-line
         lastPara = invalid ' bs:disable-line
         for each node in nodes
-            if node.kind = "quote"
+            if node.kind = NodeKind.quote
                 node.data = node.data.join(" ")
             end if
         end for
